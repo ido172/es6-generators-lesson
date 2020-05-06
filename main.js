@@ -113,13 +113,13 @@ function example7() {
 }
 
 async function main() {
-    //example1();
+    example1();
     example2();
-    //example3();
-    //example4();
-    //await example5();
-    //example6();
-    //example7();
+    example3();
+    example4();
+    await example5();
+    example6();
+    example7();
 }
 
 main();
