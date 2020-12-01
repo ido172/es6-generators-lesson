@@ -40,17 +40,22 @@ function example3() {
 function example4() {
     console.log('\n****example4****');
     const generator = generator1();
-    let result = generator.next();
-    while (!result.done) {
-        console.log(result)
-        result = generator.next();
-    }
+    console.log(generator.next());
+    console.log(generator.next());
+    console.log(generator.next());
+    console.log(generator.next());
+    console.log(generator.next());
+    console.log(generator.next());
+    console.log(generator.next());
+    console.log(generator.next());
+    console.log(generator.next());
+    console.log(generator.next());
 }
 
 async function* generator2 (urls) {
     for (const url of urls) {
         const result = await axios.get(url);
-        const title = result.data.match(/<title>(.*)<\/title>/i)[1];
+        const title = result.data.match(/<title.*?>(.*?)<\/title>/si)[1];
         yield title;
     }
 }
@@ -59,9 +64,9 @@ async function example5() {
     console.log('\n****example5****');
     const urls = [
         'http://www.google.com',
-        'http://www.twitter.com',
+        'http://www.facebook.com',
         'http://www.intsights.com',
-        'http://dashboard.intsights.com'
+        'http://www.spotify.com'
     ];
 
     for await (const item of generator2(urls)) {
@@ -87,17 +92,18 @@ function example6() {
         console.log(result)
         result = generator.next();
     }
+    console.log(result)
 }
 
 function* generator4() {
     let i = 0;
     while (true) {
-        const stopRunning = yield i++;
+        i++;
+        const stopRunning = yield i;
         if (stopRunning) {
             break
         }
     }
-    yield -1;
 
     return 'done';
 }
@@ -112,14 +118,43 @@ function example7() {
     console.log(generator.next());
 }
 
+function* chunkify(array, chunkSize) {
+    let chunk = [];
+
+    for  (const item of array) {
+        chunk.push(item);
+
+        if (0 === chunk.length % chunkSize) {
+            yield chunk;
+            chunk = [];
+        }
+    }
+
+    if (0 < chunk.length) {
+        yield chunk;
+    }
+}
+
+function example8() {
+    const array = [];
+    for (let i = 0; i < 12345; i++) {
+        array.push(i);
+    }
+
+    for (const chunk of chunkify(array, 500)) {
+        console.log(chunk[0], chunk.length);
+    }
+}
+
 async function main() {
     example1();
-    example2();
-    example3();
-    example4();
-    await example5();
-    example6();
-    example7();
+    //example2();
+    //example3();
+    //example4();
+    //await example5();
+    //example6();
+    //example7();
+    //example8()
 }
 
 main();
